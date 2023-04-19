@@ -7,6 +7,7 @@
 <html>
 <head>
     <title>WebSocket Example</title>
+    <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -38,5 +39,8 @@
 <div id="messages"></div>
 <input type="text" id="message-input" placeholder="Enter a message">
 <button id="send-btn">Send</button>
+
+<div id="currencies"></div>
+
 </body>
 </html>
