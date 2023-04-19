@@ -1,15 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
+import WsConnect from './WsConnect';
 
-function Сurrencies() {
-    return (
-        <div>
-            <h1>Hello, World!</h1>
-        </div>
-    );
-}
+
 
 if (document.getElementById('currencies')) {
-    createRoot(document.getElementById('currencies')).render(<Сurrencies />);
+    createRoot(document.getElementById('currencies')).render(<WsConnect />);
 }
