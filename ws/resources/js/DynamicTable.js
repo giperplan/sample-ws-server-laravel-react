@@ -11,7 +11,7 @@ function DynamicTable() {
     const columns = Object.keys(data[0]);
 
     return (
-        <table>
+        <table class="table">
             <thead>
             <tr>
                 {columns.map(column => (
