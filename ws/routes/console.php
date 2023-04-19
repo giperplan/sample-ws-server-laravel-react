@@ -2,6 +2,10 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+use App\Http\Controllers\WebSocketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +18,18 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+Artisan::command('websocket:serve', function () {
+    $port = config('ws.port');
+    $server = IoServer::factory(
+        new HttpServer(
+            new WsServer(
+                new WebSocketController()
+            )
+        ),
+        $port
+    );
+
+    $this->line("WebSocket server started on port {$port}.");
+
+    $server->run();
+})->describe('Start the WebSocket server.');
