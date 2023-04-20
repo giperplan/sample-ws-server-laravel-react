@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-json": "*",
         "cboden/ratchet": "^0.4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -13,8 +14,8 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
-        "twbs/bootstrap": "^5.2",
-      "ext-json": "*"
+        "ratchet/pawl": "^0.4.1",
+        "twbs/bootstrap": "^5.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

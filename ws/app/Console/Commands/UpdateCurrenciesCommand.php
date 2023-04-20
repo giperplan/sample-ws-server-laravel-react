@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Models\ApiModel;
+use App\Models\Models\WsClient;
 use Illuminate\Console\Command;
 
 class UpdateCurrenciesCommand extends Command
@@ -38,13 +39,15 @@ class UpdateCurrenciesCommand extends Command
      */
     public function handle()
     {
-        $api = new ApiModel();
-
         // Ищем обновления
-        $diff = $api->getLastDiff();
+        $diff = (new ApiModel())->getLastDiff();
 
-        //todo отправляем всем через ws
+        echo 'Обновлено '.count($diff)." валют\n";
 
+        //отправляем всем через ws
+        if ($diff or 1) {
+            WsClient::sendToAll(['type' => 'update', 'data'=>$diff]);
+        }
 
         return 0;
     }

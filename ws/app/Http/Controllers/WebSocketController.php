@@ -22,10 +22,22 @@ class WebSocketController implements MessageComponentInterface
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        foreach ($this->connections as $connection) {
-            if ($connection !== $from) {
-                $connection->send($msg);
+        // Получаем IP-адрес соединения
+        $ipAddress = $from->remoteAddress;
+        echo $ipAddress."\n";
+
+        // Определяем, является ли IP-адрес локальным
+        $isLocal = in_array($ipAddress, ['127.0.0.1', '::1']);
+
+        if ($isLocal) {
+            echo 'Send '.strlen($msg).' Bytes for '.(count($this->connections) - 1)." clients\n";
+            foreach ($this->connections as $connection) {
+                if ($connection !== $from) {
+                    $connection->send($msg);
+                }
             }
+        } else {
+            echo "Send not allowed for ip {$ipAddress}\n";
         }
     }
 
