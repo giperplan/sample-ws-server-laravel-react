@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Models\ApiModel;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
@@ -18,6 +19,10 @@ class WebSocketController implements MessageComponentInterface
     {
         $this->connections->attach($connection);
         echo "Connection opened ({$connection->resourceId})\n";
+        $connection->send(json_encode([
+            'type'=>'new',
+            'data'=>(new ApiModel)->getFromStorage()
+        ]));
     }
 
     public function onMessage(ConnectionInterface $from, $msg)
