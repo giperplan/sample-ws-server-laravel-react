@@ -45,6 +45,6 @@ class ApiModel extends Model
     {
         $diff = array_diff(array_map('serialize', $lastData), array_map('serialize', $oldData));
         $diff = array_map('unserialize', $diff);
-        return $diff;
+        return array_values($diff);
     }
 }
