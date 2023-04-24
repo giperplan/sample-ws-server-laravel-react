@@ -9,7 +9,7 @@ function DynamicTable(props) {
             <div>Loading</div>
         );
     } else {
-        const columns = Object.keys(data[0]);
+        const columns = Object.keys(data[0]).filter((item => item!=='highlight'));
         return (
             <table className="table">
                 <thead>
