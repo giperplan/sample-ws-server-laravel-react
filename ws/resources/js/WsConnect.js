@@ -1,49 +1,66 @@
-import React, { Component } from 'react';
-import { w3cwebsocket as W3CWebSocket } from 'websocket';
+import React, {useEffect, useState} from 'react';
+
 import DynamicTable from "./DynamicTable";
 
-class WsConnect extends Component {
-    constructor(props) {
-        super(props);
+function WsConnect() {
+    const [currencies, setCurrencies] = useState([]);
 
-        this.state = {
-            message: '',
+    // Вливаем новые значения в существующие и ставим для них флаг подсветки
+    function updateCurrencies(newCurrencies) {
+        setCurrencies(prevCurrencies => {
+             return prevCurrencies.map(prevCurrency => {
+                 const newCurrency = newCurrencies.find(newCurrency => {
+                     return  newCurrency.currencyCodeA === prevCurrency.currencyCodeA && newCurrency.currencyCodeB === prevCurrency.currencyCodeB
+                 });
+                 if (newCurrency) {
+                     newCurrency.highlight = true;
+                     return newCurrency;
+                 } else {
+                     return prevCurrency;
+                 }
+             });
+        });
+    }
+    //Отключаем флаг подсветки у всех
+    function flushCurrencies() {
+        setCurrencies(prevCurrencies => {
+            return prevCurrencies.map( prevCurrency => {
+                prevCurrency.highlight = false;
+                return prevCurrency;
+            });
+        });
+    }
+
+    useEffect(() => {
+        const socket = new WebSocket('ws://localhost:8090');
+
+        socket.onmessage = (event) => {
+            const response = JSON.parse(event.data);
+            if (response.type === 'update') {
+                updateCurrencies(response.data);
+                setTimeout(()=>{
+                    flushCurrencies();
+                },1000);
+            } else if (response.type === 'all') {
+                setCurrencies(response.data);
+            }
         };
-    }
-
-    componentDidMount() {
-        this.ws = new W3CWebSocket('ws://localhost:8090');
-        this.ws.onopen = () => {
-            console.log('WebSocket connected');
+        socket.onopen = (event) => {
+            console.log('Соединение установлено');
         };
-        this.ws.onmessage = (event) => {
-            this.setState({ message: event.data });
+        socket.onclose = (event) => {
+            console.log('Соединение закрыто');
         };
-        this.ws.onclose = () => {
-            console.log('WebSocket disconnected');
+        return () => {
+            socket.close();
         };
-    }
+    }, []);
 
-    componentDidUpdate() {
-        this.ws.send(this.state.message);
-    }
-
-    componentWillUnmount() {
-        this.ws.close();
-    }
-
-    handleMessageChange = (event) => {
-        this.setState({ message: event.target.value });
-    };
-
-    render() {
-        return (
-            <div>
-                <input type="text" value={this.state.message} onChange={this.handleMessageChange} />
-                <DynamicTable/>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <DynamicTable data={currencies} />
+        </div>
+    );
 }
 
 export default WsConnect;

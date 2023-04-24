@@ -1,12 +1,12 @@
 import React from 'react';
 
 function TableRow(props) {
-    const { item, columns, handleChange } = props;
+    const { item, columns } = props;
 
     return (
-        <tr>
+        <tr className={item.highlight ? 'highlight' : ''}>
             {columns.map(column => (
-                <td key={`${item.id}-${column}`}>
+                <td key={column}>
                     {item[column]}
                 </td>
             ))}

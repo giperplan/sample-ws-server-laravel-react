@@ -1,0 +1,8 @@
+.table tr {
+    transition: background-color 15s;
+}
+
+.table tr.highlight {
+    background-color: #9cffdd;
+    transition: none;
+}

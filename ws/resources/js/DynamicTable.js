@@ -1,31 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TableRow from './TableRow';
 
-function DynamicTable() {
-    const [data, setData] = useState([
-        { id: 1, name: 'John', age: 28 },
-        { id: 2, name: 'Jane', age: 32 },
-        { id: 3, name: 'Mike', age: 45 }
-    ]);
+function DynamicTable(props) {
+    const { data } = props;
 
-    const columns = Object.keys(data[0]);
-
-    return (
-        <table class="table">
-            <thead>
-            <tr>
-                {columns.map(column => (
-                    <th key={column}>{column}</th>
-                ))}
-            </tr>
-            </thead>
-            <tbody>
-            {data.map(item => (
-                <TableRow key={item.id} item={item} columns={columns} />
-            ))}
-            </tbody>
-        </table>
-    );
+    if (data.length === 0) {
+        return (
+            <div>Loading</div>
+        );
+    } else {
+        const columns = Object.keys(data[0]);
+        return (
+            <table className="table">
+                <thead>
+                <tr>
+                    {columns.map(column => (
+                        <th key={column}>{column}</th>
+                    ))}
+                </tr>
+                </thead>
+                <tbody>
+                {data.map(item => {
+                    let key = `${item.currencyCodeA}-${item.currencyCodeB}`;
+                    return (
+                        <TableRow key={key} item={item} columns={columns}/>
+                    )
+                })}
+                </tbody>
+            </table>
+        );
+    }
 }
 
 export default DynamicTable;
