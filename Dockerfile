@@ -49,5 +49,5 @@ RUN touch /var/log/cron.log
 CMD cron && tail -f /var/log/cron.log
 
 # Запуск PHP и WS серверов 
-CMD php artisan serve --host=0.0.0.0 --port=8000 | php artisan websocket:serve 
+CMD cron -f | php artisan serve --host=0.0.0.0 --port=8000 | php artisan websocket:serve 
 
