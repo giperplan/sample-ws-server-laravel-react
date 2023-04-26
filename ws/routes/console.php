@@ -29,6 +29,9 @@ Artisan::command('websocket:serve', function () {
         $port
     );
 
+    Artisan::call('update-currencies');
+
+    $this->line("Server started. See http://127.0.0.1:8000");
     $this->line("WebSocket server started on port {$port}.");
 
     $server->run();
