@@ -32,7 +32,7 @@ class WebSocketController implements MessageComponentInterface
         echo $ipAddress."\n";
 
         // Определяем, является ли IP-адрес локальным
-        $isLocal = in_array($ipAddress, ['127.0.0.1', '::1']);
+        $isLocal = in_array($ipAddress, ['127.0.0.1', '::1', config('ws.local_ip')]);
 
         if ($isLocal) {
             echo 'Send '.strlen($msg).' Bytes for '.(count($this->connections) - 1)." clients\n";
