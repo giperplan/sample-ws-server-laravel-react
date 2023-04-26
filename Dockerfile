@@ -14,7 +14,8 @@ RUN apt-get update && \
         wget \
         cron \
         mc \
-        htop
+        htop \
+        dos2unix
 
 # Установка Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -44,7 +45,9 @@ EXPOSE 8090
 # создаём крон
 COPY cron /etc/cron.d/cron
 RUN chmod 0644 /etc/cron.d/cron 
+RUN dos2unix /etc/cron.d/cron 
 RUN crontab /etc/cron.d/cron
+
 RUN touch /var/log/cron.log 
 CMD cron && tail -f /var/log/cron.log
 
