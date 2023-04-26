@@ -4,6 +4,14 @@ import DynamicTable from "./DynamicTable";
 
 function WsConnect() {
     const [currencies, setCurrencies] = useState([]);
+    const [secondsPass, setSecondsPass] = useState(0);
+    const [isConnect, setIsConnect] = useState(false);
+
+    let updateTS =  new Date();
+
+    function newUpdateTS() {
+        updateTS = new Date();
+    }
 
     // Вливаем новые значения в существующие и ставим для них флаг подсветки
     function updateCurrencies(newCurrencies) {
@@ -32,7 +40,7 @@ function WsConnect() {
     }
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8090');
+        const socket = new WebSocket('ws://127.0.0.1:8090');
 
         socket.onmessage = (event) => {
             const response = JSON.parse(event.data);
@@ -40,17 +48,24 @@ function WsConnect() {
                 updateCurrencies(response.data);
                 setTimeout(()=>{
                     flushCurrencies();
+                    newUpdateTS();
                 },1000);
             } else if (response.type === 'all') {
                 setCurrencies(response.data);
+                newUpdateTS();
             }
         };
         socket.onopen = (event) => {
-            console.log('Соединение установлено');
+            setIsConnect(true);
         };
         socket.onclose = (event) => {
-            console.log('Соединение закрыто');
+            setIsConnect(false)
         };
+
+        setInterval(()=>{
+            setSecondsPass(Math.round(((new Date()) - updateTS)/1000));
+        }, 1000);
+
         return () => {
             socket.close();
         };
@@ -58,6 +73,16 @@ function WsConnect() {
 
     return (
         <div>
+            {isConnect ? (
+                <div className="alert alert-primary" role="alert">
+                    Connected. last updated {secondsPass} seconds ago
+                </div>
+            ):(
+                <div className="alert alert-danger" role="alert">
+                    Disconnected
+                </div>
+            )}
+            <h1>Currency rate table</h1>
             <DynamicTable data={currencies} />
         </div>
     );

@@ -12,7 +12,6 @@
 </head>
 <body>
 <div class="container">
-    <h1>Currency table</h1>
     <div id="currencies"></div>
 </div>
 </body>
